@@ -2,6 +2,11 @@
 This is a go Authentication app.
 Uses google for authentication.
 
+
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
 ## Client
 Client is a vite app
 
@@ -15,10 +20,7 @@ Start client
 bun run dev
 ```
 
-
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+## Server 
 
 ## MakeFile
 
