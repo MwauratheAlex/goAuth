@@ -1,12 +1,15 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/markbates/goth/gothic"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
@@ -15,6 +18,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	r.Get("/", s.HelloWorldHandler)
 	r.Get("/health", s.healthHandler)
+	r.Get("/auth/{provider}/callback", s.getAuthCallbackFunction)
+	r.Get("/auth/{provider}", s.loginHandler)
 
 	return r
 }
@@ -35,3 +40,28 @@ func (s *Server) healthHandler(w http.ResponseWriter, r *http.Request) {
 	jsonResp, _ := json.Marshal(s.db.Health())
 	_, _ = w.Write(jsonResp)
 }
+
+func (s *Server) getAuthCallbackFunction(w http.ResponseWriter, r *http.Request) {
+	provider := chi.URLParam(r, "provider")
+	
+	r = r.WithContext(context.WithValue(context.Background(), "provider", provider))
+
+	user, err := gothic.CompleteUserAuth(w, r)
+	if err != nil {
+		fmt.Fprintln(w, err)
+		return
+	}
+	
+	fmt.Println(user)
+	http.Redirect(w, r, "http://localhost:5173", http.StatusFound)
+}
+
+func (s *Server) loginHandler(w http.ResponseWriter, r *http.Request) {
+	provider := chi.URLParam(r, "provider")
+	fmt.Println("hello world")
+	
+	r = r.WithContext(context.WithValue(context.Background(), "provider", provider))
+
+	gothic.BeginAuthHandler(w, r)
+}
+

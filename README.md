@@ -1,6 +1,9 @@
 # Project goAuth
+This is a go Authentication app.
+Uses google for authentication.
 
-One Paragraph of project description goes here
+## Client
+Client is a vite app
 
 ## Getting Started
 
